@@ -1,5 +1,5 @@
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
-use tokio::net::{TcpListener, TcpStream};
+use tokio::net::{TcpListener};
 use tokio::sync::broadcast;
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
@@ -35,7 +35,7 @@ async fn main() {
         let clients = Arc::clone(&clients);
 
         // 分配新的客户端 ID
-        let mut client_id = {
+        let client_id = {
             let mut clients = clients.write().unwrap();
             next_id += 1;
             clients.insert(next_id, format!("user:{}", next_id));
@@ -107,7 +107,7 @@ async fn handle_client_message(
     client_id: usize,
     line: &str,
     clients: &Arc<RwLock<HashMap<usize, String>>>,
-    mut tx: broadcast::Sender<(usize, String)>,
+    tx: broadcast::Sender<(usize, String)>,
 ) {
     if line.starts_with("/nick ") {
         // 设置或更新客户端的昵称
