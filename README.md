@@ -4,6 +4,7 @@
 ### smallchat-rs是[smallchat](https://github.com/antirez/smallchat)的Rust实现
 
 本项目使用`tokio`异步编程库，并尽量还原了[smallchat](https://github.com/antirez/smallchat)的功能，并加上了一些中文注释。
+本项目是我用来学习Rust异步编程和网络编程的一个小试水，我只是一个Rust新手，欢迎诸位大佬多多指点。
 
 ## 使用方法
 
