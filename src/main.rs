@@ -1,9 +1,9 @@
 // 导入tokio相关的异步I/O特性，包括异步读写流和缓冲读取
-use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
-use tokio::net::{TcpListener};
-use tokio::sync::broadcast;
 use std::collections::HashMap;
 use std::sync::{Arc, RwLock};
+use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
+use tokio::net::TcpListener;
+use tokio::sync::broadcast;
 
 // `tokio::main` 宏，表示异步main函数，入口点为异步程序
 #[tokio::main]
@@ -36,7 +36,7 @@ async fn main() {
         // 克隆clients的Arc以在异步块中使用
         let clients = Arc::clone(&clients);
 
-        // 为每个新的连接创建唯一的客户端ID 
+        // 为每个新的连接创建唯一的客户端ID
         let client_id = {
             let mut clients = clients.write().unwrap();
             next_id += 1;
@@ -54,7 +54,10 @@ async fn main() {
             let mut line = String::new();
 
             // 向新客户端发送欢迎消息
-            let welcome_message = format!("Welcome! Your ID is {}. Use '/nick NAME' to set a nickname.\n", client_id);
+            let welcome_message = format!(
+                "Welcome! Your ID is {}. Use '/nick NAME' to set a nickname.\n",
+                client_id
+            );
             writer.write_all(welcome_message.as_bytes()).await.unwrap();
 
             // 启动一个事件循环，直到客户端断开连接
