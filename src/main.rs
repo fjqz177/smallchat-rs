@@ -122,12 +122,12 @@ async fn handle_client_message(
     if line.starts_with("/nick ") {
         // 用户尝试设置新的昵称
         let nick = line[6..].trim(); // 提取新昵称，假设命令格式总是正确的
-        let mut clients = clients.write().unwrap();
+        let mut clients = clients.write().unwrap(); // 获取写锁
         clients.insert(client_id, nick.to_string()); // 更新HashMap中的昵称
     } else {
         // 其他信息将被广播给所有客户端
-        let clients = clients.read().unwrap();
-        let nick = clients.get(&client_id).unwrap();
+        let clients = clients.read().unwrap(); // 获取读锁
+        let nick = clients.get(&client_id).unwrap(); // 获取发送者的昵称
         let msg = format!("{}> {}", nick, line); // 格式化消息
         tx.send((client_id, msg)).unwrap(); // 发送消息
     }
