@@ -9,7 +9,7 @@ use tokio::sync::broadcast;
 #[tokio::main]
 async fn main() {
     // 绑定TCP监听器到本地地址和端口7711
-    let listener = TcpListener::bind("127.0.0.1:7711").await.unwrap();
+    let listener = TcpListener::bind("0.0.0.0:7711").await.unwrap();
 
     // 创建一个广播通道，可以向订阅者广播消息
     let (tx, _rx) = broadcast::channel(10);
