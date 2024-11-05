@@ -55,7 +55,7 @@ async fn main() {
 
             // 向新客户端发送欢迎消息
             let welcome_message = format!(
-                "Welcome! Your ID is {}. Use '/nick NAME' to set a nickname.\n",
+                "Welcome! Your ID is \x1b[1;39;42m{}\x1b[0m. Use '\x1b[1;39;42m/nick NAME\x1b[0m' to set a nickname.\n",
                 client_id
             );
             writer.write_all(welcome_message.as_bytes()).await.unwrap();
@@ -121,14 +121,15 @@ async fn handle_client_message(
 ) {
     if line.starts_with("/nick ") {
         // 用户尝试设置新的昵称
-        let nick = line[6..].trim(); // 提取新昵称，假设命令格式总是正确的
+        let (_, nick) = line.split_at(6); // 使用 split_at 确保不会破坏 UTF-8 编码
+        let nick = nick.trim(); // 提取新昵称，假设命令格式总是正确的
         let mut clients = clients.write().unwrap(); // 获取写锁
         clients.insert(client_id, nick.to_string()); // 更新HashMap中的昵称
     } else {
         // 其他信息将被广播给所有客户端
         let clients = clients.read().unwrap(); // 获取读锁
         let nick = clients.get(&client_id).unwrap(); // 获取发送者的昵称
-        let msg = format!("{}> {}", nick, line); // 格式化消息
+        let msg = format!("\x1b[1;39;42m{}\x1b[0m\x1b[1;30;47m>\x1b[0m{}", nick, line); // 格式化消息
         tx.send((client_id, msg)).unwrap(); // 发送消息
     }
 }
